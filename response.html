@@ -3,136 +3,124 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YAY!</title>
+  <title>Yay! 💞</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="page page-success">
-  <!-- Falling hearts/confetti layer -->
-  <div class="falling" id="falling" aria-hidden="true"></div>
+  <!-- Falling hearts/confetti -->
+  <div class="falling" aria-hidden="true" id="falling"></div>
 
   <main class="card">
-    <h1 class="title">Correct Answer! Your prize: Unlimited hugs! 🤗</h1>
-    <p class="subtitle">Congratulations, you've made me the happiest person! ❤️</p>
+    <p class="badge">🎉 Victory!</p>
+    <h1>Correct Answer! Your prize: Unlimited hugs! 🤗</h1>
+    <p class="subtext">Congratulations, you’ve made me the happiest person! ❤️</p>
 
-    <!-- Flower image (free source). You can replace this with your own photo easily. -->
-    <figure class="media">
-      <!-- OPTION A: Unsplash image (free). Replace the URL if you want a different flower. -->
+    <div class="photo-area">
+      <!-- EASY PERSONAL PHOTO:
+           Replace the src with your own image (or keep the placeholder).
+           Tip: Put your image in the repo like "our-photo.jpg" and set src="our-photo.jpg"
+      -->
       <img
-        id="heroImg"
-        src="https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1200&q=80"
-        alt="Beautiful flowers"
-        loading="lazy"
+        id="ourPhoto"
+        class="our-photo"
+        src="https://images.unsplash.com/photo-1520975682049-2a6a0a88079f?auto=format&fit=crop&w=1200&q=80"
+        alt="A romantic flower photo"
       />
-      <figcaption class="tiny-note">
-        <!-- Customize caption -->
-        A bouquet for you 🌹💐🌸
-      </figcaption>
-    </figure>
+      <p class="photo-caption">
+        🌹💐🌸
+        <!-- Change this caption if you want -->
+        (Psst: you can swap this image for your own photo!)
+      </p>
+    </div>
 
-    <div class="btn-row">
+    <div class="reveal">
       <button class="btn btn-primary" id="revealBtn" type="button">
-        Claim Your Prize ✨
+        Claim Your Prize 🎁
       </button>
+
+      <div class="hidden-message" id="hiddenMessage" hidden>
+        <h2>One more thing…</h2>
+        <p>
+          <!-- ✅ ADD YOUR ROMANTIC MESSAGE HERE -->
+          <span class="editable">
+            [Put your personal message here — like a mini love note 💌]
+          </span>
+        </p>
+      </div>
     </div>
 
-    <!-- Hidden message area -->
-    <section class="reveal" id="revealArea" hidden>
-      <h2 class="reveal-title">A message for you 💌</h2>
-
-      <!-- EDIT THIS TEXT: Put your romantic message here -->
-      <p class="reveal-text" id="personalMessage">
-        <!-- Replace everything inside this paragraph with your own message -->
-        My Dearest Love,<br><br>
-        Miles dare to place themselves between us, yet our hearts remain entirely unmoved by them. Each day, I find you in the smallest moments, when your umbrella shields me from the rain, or when I take a step in your badminton shoes. In the quiet moments, you occupy my mind.
-
-        So even with the distance between us, I carry you with me, and I want you to know that you are deeply cherished.
-
-        Will you be my Valentine, Lily?
-      </p>
-
-      <p class="tiny-note">
-        Tip: You can also add a personal photo below (instructions in README).
-      </p>
-    </section>
-
-    <!-- Optional music (tap to play). Replace audio file if you add your own. -->
     <div class="music">
+      <!-- OPTIONAL MUSIC:
+           Put an mp3 file in your repo, e.g. "song.mp3"
+           Then set: <source src="song.mp3" type="audio/mpeg">
+      -->
       <button class="btn btn-outline" id="musicBtn" type="button" aria-pressed="false">
-        ▶ Play romantic music (optional)
+        ▶ Play music (optional)
       </button>
-      <p class="tiny-note">
-        <!-- Keep it honest: autoplay is blocked on many phones -->
-        (Autoplay is usually blocked — tap to play.)
-      </p>
 
-      <!-- NOTE: This URL is just a placeholder; replace with your own audio file in the repo. -->
-      <audio id="bgMusic" preload="none">
-        <!-- Put your own audio file in the repo like /music.mp3 and update src -->
-        <source src="music.mp3" type="audio/mpeg" />
+      <audio id="bgMusic" preload="none" loop>
+        <!-- Example: replace with your own file in the repo -->
+        <!-- <source src="song.mp3" type="audio/mpeg" /> -->
       </audio>
+
+      <p class="tiny-note">
+        Music is off by default (phones often block autoplay). Tap to play.
+      </p>
     </div>
 
-    <p class="tiny-note">
-      <!-- Optional -->
-      Made with love 🫶
-    </p>
+    <a class="btn btn-outline" href="index.html">Start over ↩</a>
   </main>
 
-<script>
-/*
-  Success page features:
-  - Falling hearts/confetti animation
-  - "Claim Your Prize" reveals your personal message section
-  - Optional music button (replace music.mp3 with your own file)
-*/
+  <script>
+    // Falling hearts/confetti generator
+    const falling = document.getElementById("falling");
+    const emojis = ["💗","💖","💘","💕","💝","✨","❤️"];
 
-(() => {
-  const falling = document.getElementById('falling');
-  const revealBtn = document.getElementById('revealBtn');
-  const revealArea = document.getElementById('revealArea');
+    function spawnPiece() {
+      const el = document.createElement("div");
+      el.className = "piece";
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.animationDuration = (Math.random() * 2.8 + 3.2) + "s";
+      el.style.fontSize = (Math.random() * 16 + 16) + "px";
+      el.style.opacity = (Math.random() * 0.4 + 0.6);
 
-  const musicBtn = document.getElementById('musicBtn');
-  const bgMusic = document.getElementById('bgMusic');
-
-  // Generate falling hearts
-  const emojis = ["💗","💖","💘","💝","❤️","✨"];
-  for (let i = 0; i < 26; i++) {
-    const s = document.createElement('span');
-    s.className = 'fall';
-    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    s.style.left = Math.random() * 100 + 'vw';
-    s.style.animationDelay = (Math.random() * 1.2) + 's';
-    s.style.animationDuration = (3.8 + Math.random() * 2.2) + 's';
-    s.style.fontSize = (14 + Math.random() * 18) + 'px';
-    falling.appendChild(s);
-  }
-
-  // Reveal personal message
-  revealBtn.addEventListener('click', () => {
-    revealArea.hidden = false;
-    revealArea.classList.add('pop');
-    revealBtn.textContent = "Prize claimed ✅";
-    revealBtn.disabled = true;
-  });
-
-  // Music toggle (optional)
-  musicBtn.addEventListener('click', async () => {
-    try {
-      if (bgMusic.paused) {
-        await bgMusic.play();
-        musicBtn.textContent = "⏸ Pause music";
-        musicBtn.setAttribute('aria-pressed', 'true');
-      } else {
-        bgMusic.pause();
-        musicBtn.textContent = "▶ Play romantic music (optional)";
-        musicBtn.setAttribute('aria-pressed', 'false');
-      }
-    } catch (err) {
-      // If no file exists or playback fails, show a friendly note
-      musicBtn.textContent = "Add your own music.mp3 💿";
+      falling.appendChild(el);
+      setTimeout(() => el.remove(), 7000);
     }
-  });
-})();
-</script>
+
+    // Create a steady stream
+    setInterval(spawnPiece, 220);
+    for (let i = 0; i < 10; i++) setTimeout(spawnPiece, i * 120);
+
+    // Reveal personal message
+    const revealBtn = document.getElementById("revealBtn");
+    const hiddenMessage = document.getElementById("hiddenMessage");
+    revealBtn.addEventListener("click", () => {
+      hiddenMessage.hidden = !hiddenMessage.hidden;
+      revealBtn.textContent = hiddenMessage.hidden ? "Claim Your Prize 🎁" : "Hide (but why?) 😄";
+    });
+
+    // Optional music button
+    const musicBtn = document.getElementById("musicBtn");
+    const bgMusic = document.getElementById("bgMusic");
+
+    musicBtn.addEventListener("click", async () => {
+      try {
+        if (bgMusic.paused) {
+          await bgMusic.play();
+          musicBtn.textContent = "⏸ Pause music";
+          musicBtn.setAttribute("aria-pressed", "true");
+        } else {
+          bgMusic.pause();
+          musicBtn.textContent = "▶ Play music (optional)";
+          musicBtn.setAttribute("aria-pressed", "false");
+        }
+      } catch (err) {
+        // Usually happens if there is no source file or autoplay restriction
+        alert("Add an audio file source in response.html (see comments) to enable music 🎵");
+      }
+    });
+  </script>
 </body>
 </html>
