@@ -1,14 +1,21 @@
-# Valentine Proposal Website 💘
+# Valentine Proposal Website 💖
 
-A cute 3-page Valentine’s proposal site with playful interactivity:
-- Landing page ➜ question page ➜ celebration page
-- “No” button does funny evasive moves
-- Attempts counter
-- Hearts burst when “Yes” is clicked
-- Falling hearts/confetti on success page
-- Optional revealable message + optional music button
+A cute, 3-page interactive Valentine’s proposal site you can host on GitHub Pages.
+
+## Files
+- `index.html` — Landing page
+- `question.html` — The big question + funny “No” interactivity
+- `response.html` — Celebration page with falling hearts + reveal message
+- `style.css` — Shared styling
 
 ---
 
-## Files
+## How to customize
 
+### 1) Add your own romantic message
+Open `response.html` and find:
+
+```html
+<p class="reveal-text" id="personalMessage">
+  [Put your personal romantic message here 💖]
+</p>

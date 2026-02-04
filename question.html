@@ -3,195 +3,219 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Question</title>
+  <title>The Big Question</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="page page-question" id="page">
+<body class="page page-question" id="pageQuestion">
   <main class="card">
-    <p class="badge">❤️ Important Question</p>
-    <h1>Will you be my Valentine?</h1>
+    <h1 class="title">Will you be my Valentine?</h1>
 
-    <p class="subtext" id="message">
-      Choose wisely… (no pressure 👀)
+    <p class="subtitle" id="message">
+      <!-- Default helper text -->
+      Choose wisely… my heart is on the line 💗
     </p>
 
-    <p class="attempts" id="attemptsText">Number of "No" attempts: <span id="attemptCount">0</span></p>
+    <p class="attempts" aria-live="polite">
+      Number of “No” attempts: <span id="noCount">0</span>
+    </p>
 
-    <div class="btn-row">
-      <!-- YES: links to response.html -->
-      <a class="btn btn-yes" id="yesBtn" href="response.html">Yes 💚</a>
-
-      <!-- NO: mischievous -->
-      <button class="btn btn-no" id="noBtn" type="button">No ❤️‍🩹</button>
+    <div class="btn-row" id="btnRow">
+      <a class="btn btn-yes" id="yesBtn" href="response.html">Yes</a>
+      <button class="btn btn-no" id="noBtn" type="button">No</button>
     </div>
 
     <p class="tiny-note">
-      <!-- Tip: customize these lines freely -->
-      PS: The “No” button is… shy.
+      <!-- Customize or delete -->
+      Tip: “Yes” comes with hugs.
     </p>
   </main>
 
-  <!-- Small overlay for hearts burst when YES -->
-  <div class="hearts-layer" id="heartsLayer" aria-hidden="true"></div>
+  <!-- Hearts burst overlay (used when clicking Yes) -->
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
 
-  <script>
-    // ----------------------------
-    // Customize-friendly variables
-    // ----------------------------
-    const noTexts = ["Nope!", "Are you sure?", "Really??", "Try Yes instead! 😉"];
-    const maxEscapesBeforeHint = 3;
+<script>
+/*
+  Interactivity Summary:
+  - First click "No": background turns red + achievement message
+  - "No" button dodges when cursor gets near (hover/touch)
+  - "No" button text cycles through funny phrases
+  - Counter increments each attempt
+  - After 3 attempts: show "Okay okay! How about 'Yes' instead? ❤️"
+  - If she persists: "Fine, I'll ask louder..." and then "PLEASE BE MY VALENTINE! ❤️"
+  - Clicking "Yes": hearts burst then navigate
+*/
 
-    // ----------------------------
-    // Element refs
-    // ----------------------------
-    const page = document.getElementById("page");
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
-    const message = document.getElementById("message");
-    const attemptCountEl = document.getElementById("attemptCount");
-    const heartsLayer = document.getElementById("heartsLayer");
+(() => {
+  const page = document.getElementById('pageQuestion');
+  const noBtn = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
+  const msg = document.getElementById('message');
+  const noCountEl = document.getElementById('noCount');
+  const btnRow = document.getElementById('btnRow');
+  const overlay = document.getElementById('overlay');
 
-    // ----------------------------
-    // State
-    // ----------------------------
-    let noAttempts = 0;
-    let textIndex = 0;
-    let hasFirstNoClicked = false;
+  // Phrases for the "No" button text cycling
+  const noPhrases = ["Nope!", "Are you sure?", "Really??", "Try Yes instead! 😉"];
+  let phraseIndex = 0;
 
-    // Place the "No" button in a movable wrapper so we can position it freely
-    // without breaking layout.
-    const wrap = document.createElement("div");
-    wrap.className = "no-wrap";
-    noBtn.parentNode.insertBefore(wrap, noBtn);
-    wrap.appendChild(noBtn);
+  // Attempt counter
+  let noAttempts = 0;
 
-    // Give wrapper initial positioning
-    wrap.style.position = "relative";
-    noBtn.style.position = "relative";
+  // Used to make the dodge effect funny but not too frustrating
+  // (We keep the button inside a "play area" around the buttons.)
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
-    // Utility: update counter
-    function setAttempts(n) {
-      noAttempts = n;
-      attemptCountEl.textContent = String(noAttempts);
+  // Create a "play area" rectangle based on the button row
+  function getPlayArea() {
+    const r = btnRow.getBoundingClientRect();
+    // Expand the rectangle a bit so the button can dodge around
+    const padding = 18;
+    return {
+      left: r.left - padding,
+      top: r.top - padding,
+      right: r.right + padding,
+      bottom: r.bottom + padding
+    };
+  }
+
+  function updateNoText() {
+    noBtn.textContent = noPhrases[phraseIndex];
+    phraseIndex = (phraseIndex + 1) % noPhrases.length;
+  }
+
+  function setMessageForAttempts() {
+    if (noAttempts === 1) {
+      msg.textContent = "Achievement Unlocked: Breaking My Heart 💔 Try again?";
+      page.classList.add('heartbreak'); // turns background red-ish
+    } else if (noAttempts === 3) {
+      msg.textContent = "Okay okay! How about 'Yes' instead? ❤️";
+    } else if (noAttempts === 6) {
+      msg.textContent = "Fine, I’ll ask louder: Will you be my Valentine?? 😤💗";
+    } else if (noAttempts >= 8) {
+      msg.textContent = "PLEASE BE MY VALENTINE! ❤️ (I’m on my knees… metaphorically.)";
+      page.classList.add('plead');
+    }
+  }
+
+  // Move the "No" button to a random spot within the play area.
+  function dodgeNoButton() {
+    const area = getPlayArea();
+    const btnRect = noBtn.getBoundingClientRect();
+
+    // Convert current button position to "relative" within the button row.
+    // We'll use transform translate for smoothness.
+    const maxX = (area.right - area.left) - btnRect.width;
+    const maxY = (area.bottom - area.top) - btnRect.height;
+
+    // Random position
+    const randX = Math.random() * maxX;
+    const randY = Math.random() * maxY;
+
+    // Current anchor: place relative to button row top-left
+    const anchorX = area.left;
+    const anchorY = area.top;
+
+    // Compute translate so it lands inside area
+    const targetLeft = anchorX + randX;
+    const targetTop = anchorY + randY;
+
+    // Figure out current button top-left, then translate by delta
+    const currentLeft = btnRect.left;
+    const currentTop = btnRect.top;
+
+    const dx = targetLeft - currentLeft;
+    const dy = targetTop - currentTop;
+
+    // Clamp the movement a bit so it doesn't teleport too far on small screens
+    const clampedDx = clamp(dx, -220, 220);
+    const clampedDy = clamp(dy, -160, 160);
+
+    noBtn.style.transform = `translate(${clampedDx}px, ${clampedDy}px)`;
+  }
+
+  // "Near hover" detector: if cursor gets close, dodge.
+  function handleMouseMove(e) {
+    const rect = noBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+
+    // If cursor is within ~120px, dodge.
+    if (dist < 120) dodgeNoButton();
+  }
+
+  // Mobile-friendly: on touchstart near the button, dodge.
+  function handleTouchStart(e) {
+    const t = e.touches[0];
+    if (!t) return;
+
+    const rect = noBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const dist = Math.hypot(t.clientX - cx, t.clientY - cy);
+
+    if (dist < 140) dodgeNoButton();
+  }
+
+  // Click "No"
+  noBtn.addEventListener('click', () => {
+    noAttempts += 1;
+    noCountEl.textContent = String(noAttempts);
+
+    // Cycle the text each click (in addition to hover dodges)
+    updateNoText();
+
+    setMessageForAttempts();
+
+    // Make it funny-but-not-infinite: after enough tries,
+    // slightly reduce dodging so it becomes easier to click Yes.
+    if (noAttempts >= 7) {
+      // Less dodgy after lots of attempts
+      document.removeEventListener('mousemove', handleMouseMove);
+      noBtn.classList.add('tired');
     }
 
-    // Utility: move "No" button somewhere nearby, but not off-screen
-    function moveNoButton() {
-      const maxX = 140;  // gentle movement: funny, not impossible
-      const maxY = 90;
+    // Small wiggle feedback
+    noBtn.classList.remove('wiggle');
+    void noBtn.offsetWidth; // restart animation
+    noBtn.classList.add('wiggle');
+  });
 
-      // random shift
-      const x = Math.floor((Math.random() * (maxX * 2 + 1)) - maxX);
-      const y = Math.floor((Math.random() * (maxY * 2 + 1)) - maxY);
+  // Dodge on hover
+  noBtn.addEventListener('mouseenter', () => {
+    updateNoText();
+    dodgeNoButton();
+  });
 
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  // Also dodge if user gets near with mouse/touch
+  document.addEventListener('mousemove', handleMouseMove, { passive: true });
+  document.addEventListener('touchstart', handleTouchStart, { passive: true });
+
+  // Clicking "Yes": hearts burst + smooth transition
+  yesBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // Create a burst of hearts
+    overlay.classList.add('show');
+    for (let i = 0; i < 18; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'burst-heart';
+      heart.textContent = '💖';
+      heart.style.left = (40 + Math.random() * 20) + '%';
+      heart.style.top = (45 + Math.random() * 10) + '%';
+      heart.style.transform = `translate(-50%, -50%) rotate(${Math.random()*40-20}deg)`;
+      heart.style.animationDelay = (Math.random() * 0.2) + 's';
+      overlay.appendChild(heart);
     }
 
-    // Utility: cycle button text
-    function cycleNoText() {
-      textIndex = (textIndex + 1) % noTexts.length;
-      noBtn.textContent = noTexts[textIndex];
-    }
-
-    // 1) First click on "No": background turns red + achievement message
-    noBtn.addEventListener("click", () => {
-      setAttempts(noAttempts + 1);
-      cycleNoText();
-
-      if (!hasFirstNoClicked) {
-        hasFirstNoClicked = true;
-        page.classList.add("heartbreak");
-        message.textContent = "Achievement Unlocked: Breaking My Heart 💔 Try again?";
-      } else {
-        // escalate funny messages, but keep it light
-        if (noAttempts === 2) {
-          message.textContent = "Hmm… that button feels very confident. 😅";
-        } else if (noAttempts === 3) {
-          message.textContent = "Okay okay! How about 'Yes' instead? ❤️";
-        } else if (noAttempts === 5) {
-          message.textContent = "Fine, I'll ask louder: PLEASE BE MY VALENTINE! ❤️";
-        } else if (noAttempts > 6) {
-          message.textContent = "At this point, the 'Yes' button is blushing. 🥰";
-        } else {
-          message.textContent = "Try again… I dare you. 😇";
-        }
-      }
-
-      // After a few attempts, make the No button even more shy (but still possible!)
-      if (noAttempts >= maxEscapesBeforeHint) {
-        noBtn.classList.add("extra-squirmy");
-      }
-
-      moveNoButton();
-    });
-
-    // 2) "No" button moves randomly when mouse hovers near it
-    // We trigger movement when the pointer approaches the button.
-    document.addEventListener("mousemove", (e) => {
-      const rect = noBtn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      // Start escaping when within radius, but not constantly
-      const radius = noBtn.classList.contains("extra-squirmy") ? 140 : 110;
-
-      if (distance < radius) {
-        moveNoButton();
-        cycleNoText();
-      }
-    });
-
-    // 4) After 3 failed attempts, show a helpful hint (done above at attempt 3)
-
-    // YES click: celebratory transition + hearts burst, then navigate
-    yesBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      // reset heartbreak styling gently
-      page.classList.remove("heartbreak");
-      message.textContent = "YAY!! That’s the answer I was hoping for! 💞";
-
-      // show a hearts burst
-      heartsBurst(22);
-
-      // smooth fade out, then go
-      document.body.classList.add("page-fade-out");
-      setTimeout(() => {
-        window.location.href = yesBtn.href;
-      }, 650);
-    });
-
-    // Hearts burst effect
-    function heartsBurst(count = 18) {
-      heartsLayer.innerHTML = "";
-      heartsLayer.classList.add("show");
-
-      for (let i = 0; i < count; i++) {
-        const heart = document.createElement("div");
-        heart.className = "burst-heart";
-        heart.textContent = ["💗","💖","💘","💝","💕"][Math.floor(Math.random()*5)];
-
-        // random start near center-ish
-        const startX = 50 + (Math.random() * 18 - 9);
-        const startY = 55 + (Math.random() * 12 - 6);
-        heart.style.left = startX + "%";
-        heart.style.top = startY + "%";
-
-        // random drift
-        heart.style.setProperty("--dx", (Math.random() * 260 - 130) + "px");
-        heart.style.setProperty("--dy", (Math.random() * -260 - 80) + "px");
-        heart.style.setProperty("--rot", (Math.random() * 120 - 60) + "deg");
-        heart.style.animationDelay = (Math.random() * 120) + "ms";
-
-        heartsLayer.appendChild(heart);
-      }
-
-      setTimeout(() => heartsLayer.classList.remove("show"), 1100);
-    }
-  </script>
+    // Navigate after a short celebratory moment
+    setTimeout(() => {
+      window.location.href = yesBtn.href;
+    }, 650);
+  });
+})();
+</script>
 </body>
 </html>
