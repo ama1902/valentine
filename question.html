@@ -38,7 +38,7 @@
     // ----------------------------
     // Customize-friendly variables
     // ----------------------------
-    const noTexts = ["Nope!", "Are you sure?", "Really??", "Try Yes instead! 😉"];
+    const noTexts = ["Hell nah!", "Are you sure?", "imma kill u", "Try Yes instead!", "No way!", "Not a chance!", "Absolutely not!", "Nope!", "Negative!", "No ❤️‍🩹"];
     const maxEscapesBeforeHint = 3;
 
     // ----------------------------
@@ -173,7 +173,8 @@
       for (let i = 0; i < count; i++) {
         const heart = document.createElement("div");
         heart.className = "burst-heart";
-        heart.textContent = ["💗","💖","💘","💝","💕"][Math.floor(Math.random()*5)];
+        const emojis = ["💗","💖","💘","💝","💕","🍉","🧋"];
+        heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
 
         // random start near center-ish
         const startX = 50 + (Math.random() * 18 - 9);
