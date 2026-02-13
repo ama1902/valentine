@@ -550,6 +550,22 @@ h2{
 .fairy-flower.stage-bloomed .petal,
 .fairy-flower.stage-bloomed .core { opacity: 1; }
 
+.fairy-flower.stage-bloomed .petal{
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(var(--r));
+}
+
+.fairy-flower.stage-bloomed .core{
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+
+
+
+
+
+
 .fairy-flower.stage-bloomed .flower-head {
   transform: translateX(-50%) scale(1);
   animation: bloomFloat 4.8s ease-in-out infinite;
