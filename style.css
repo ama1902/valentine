@@ -544,30 +544,18 @@ h2{
   100%{ opacity:0; transform: translateY(-30vmin); filter: blur(1vmin); }
 }
 /* --- Desktop fix WITHOUT killing transform animations --- */
+/* ✅ Desktop-only: cap stem height without touching transforms/positioning */
+@media (min-width: 900px){
+  /* cap the stem so the flower stays inside the 360px garden */
+  .magical-garden .flower__line{
+    height: clamp(180px, 32vh, 260px) !important;
+  }
+  .magical-garden .flower--1 .flower__line{
+    height: clamp(180px, 32vh, 260px) !important;
+  }
 
-/* 1) Scale the whole scene using zoom-like scaling on the wrapper only */
-.magical-garden .flowers{
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
-  transform: translateX(-50%) scale(0.75); /* only wrapper scales */
-  transform-origin: bottom center;
-}
-
-/* 2) Do NOT set transform on .flower (it's animated) */
-.magical-garden .flower{
-  left: 0;            /* because wrapper is centered */
-  bottom: 32px;       /* just a little lift */
-}
-
-/* 3) Cap stem height so it can't explode on big screens */
-.magical-garden .flower__line{
-  height: min(300px, 55vmin) !important;
-}
-
-/* your special rule was forcing 70vmin — override that too */
-.magical-garden .flower--1 .flower__line{
-  height: min(300px, 55vmin) !important;
+  /* lift the whole flower slightly (does NOT affect animation transform) */
+  .magical-garden .flower{
+    bottom: 18px;
+  }
 }
