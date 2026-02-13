@@ -190,6 +190,19 @@
         loveReason.style.opacity = 1;
       }, 200);
     });
+    // ✨ Fade in story blocks on scroll
+    const storyBlocks = document.querySelectorAll(".story-block");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.2 });
+
+    storyBlocks.forEach(block => observer.observe(block));
+
   </script>
 
 </body>

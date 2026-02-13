@@ -280,3 +280,56 @@ h2{
   .btn{ width: 100%; }
   .btn-row{ gap: 10px; }
 }
+/* STORY SECTION */
+.story {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.story-block {
+  margin: 30px 0;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 182, 193, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.story-block:hover {
+  transform: scale(1.03);
+}
+
+/* LOVE GENERATOR */
+.love-generator {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.love-reason {
+  font-size: 1.2rem;
+  margin: 20px 0;
+  min-height: 40px;
+  transition: opacity 0.3s ease;
+}
+
+.story-block {
+  margin: 30px 0;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 182, 193, 0.15);
+  transition: transform 0.3s ease, opacity 0.6s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.story-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.love-generator {
+  margin-top: 40px;
+  text-align: center;
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 77, 109, .2);
+}
