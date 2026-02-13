@@ -17,27 +17,43 @@
     <p class="subtext">Congratulations, you’ve made me the happiest person! ❤️</p>
 
     <div class="photo-area">
-      <div class="bloom-scene">
-        <div id="fairyFlower" class="fairy-flower stage-bud" role="button" tabindex="0" aria-label="Tap to bloom">
-          <span class="stem"></span>
-          <span class="leaf leaf-left"></span>
-          <span class="leaf leaf-right"></span>
+      <div class="bloom-scene magical-garden not-loaded" id="garden">
+        <div class="night" aria-hidden="true"></div>
 
-          <span class="flower-head">
-            <span class="petal p1"></span>
-            <span class="petal p2"></span>
-            <span class="petal p3"></span>
-            <span class="petal p4"></span>
-            <span class="petal p5"></span>
-            <span class="petal p6"></span>
-            <span class="core"></span>
-          </span>
+        <div class="flowers" aria-label="Magical blooming flowers">
+          <div class="flower flower--1">
+            <div class="flower__leafs flower__leafs--1">
+              <div class="flower__leaf flower__leaf--1"></div>
+              <div class="flower__leaf flower__leaf--2"></div>
+              <div class="flower__leaf flower__leaf--3"></div>
+              <div class="flower__leaf flower__leaf--4"></div>
+              <div class="flower__white-circle"></div>
 
-          <span class="glow"></span>
+              <div class="flower__light flower__light--1"></div>
+              <div class="flower__light flower__light--2"></div>
+              <div class="flower__light flower__light--3"></div>
+              <div class="flower__light flower__light--4"></div>
+              <div class="flower__light flower__light--5"></div>
+              <div class="flower__light flower__light--6"></div>
+              <div class="flower__light flower__light--7"></div>
+              <div class="flower__light flower__light--8"></div>
+            </div>
+
+            <div class="flower__line">
+              <div class="flower__line__leaf flower__line__leaf--1"></div>
+              <div class="flower__line__leaf flower__line__leaf--2"></div>
+              <div class="flower__line__leaf flower__line__leaf--3"></div>
+              <div class="flower__line__leaf flower__line__leaf--4"></div>
+              <div class="flower__line__leaf flower__line__leaf--5"></div>
+              <div class="flower__line__leaf flower__line__leaf--6"></div>
+            </div>
+          </div>
         </div>
 
-        <p class="photo-caption" id="bloomCaption">Tap the bud to watch it bloom ✨</p>
+        <p class="photo-caption" id="bloomCaption">Watch it bloom… ✨</p>
       </div>
+
+
     </div>
 
     <!-- 💖 OUR STORY TIMELINE -->
@@ -201,28 +217,18 @@
     }, { threshold: 0.2 });
     storyBlocks.forEach(block => observer.observe(block));
 
-    // 🌸 Flower bloom trigger
-    const fairyFlower = document.getElementById("fairyFlower");
-    const bloomCaption = document.getElementById("bloomCaption");
-
-    function startBloom() {
-      if (fairyFlower.classList.contains("stage-growing") || fairyFlower.classList.contains("stage-bloomed")) return;
-
-      fairyFlower.classList.remove("stage-bud");
-      fairyFlower.classList.add("stage-growing");
-      bloomCaption.textContent = "Magic happening… ✨";
+    // Start the garden animation after page loads
+    // 🌙 Start magical garden bloom
+    window.addEventListener("load", () => {
+      const garden = document.getElementById("garden");
+      const caption = document.getElementById("bloomCaption");
 
       setTimeout(() => {
-        //fairyFlower.classList.remove("stage-growing")
-        fairyFlower.classList.add("stage-bloomed");
-        bloomCaption.textContent = "It bloomed! 💖";
-      }, 3800);
-    }
-
-    fairyFlower.addEventListener("click", startBloom);
-    fairyFlower.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") startBloom();
+        if (garden) garden.classList.remove("not-loaded");
+        if (caption) caption.textContent = "It bloomed for you 💖";
+      }, 650);
     });
+
   </script>
 </body>
 </html>
