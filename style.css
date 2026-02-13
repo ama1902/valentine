@@ -543,24 +543,3 @@ h2{
   75%{ opacity:1; transform: translateY(-20vmin) translateX(-2vmin); filter: blur(.2vmin); }
   100%{ opacity:0; transform: translateY(-30vmin); filter: blur(1vmin); }
 }
-/* PC fix: prevent giant vmin stem from pushing flower off-screen */
-.magical-garden .flower {
-  bottom: 18px;                 /* lift/settle the whole flower */
-}
-
-/* cap stem height so desktop screens don't make it enormous */
-.magical-garden .flower__line {
-  height: clamp(220px, 45vmin, 300px) !important;
-}
-
-/* your special rule for flower--1 was forcing 70vmin — override it too */
-.magical-garden .flower--1 .flower__line {
-  height: clamp(220px, 45vmin, 300px) !important;
-}
-
-/* (optional) keep the bloom visible without needing huge scaling */
-.magical-garden .flowers {
-  transform: translateX(-50%) scale(0.85);
-  transform-origin: bottom center;
-  left: 50%;
-}
