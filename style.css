@@ -475,3 +475,112 @@ h2{
 .fairy-flower.stage-growing .p2 { animation: petalOpen 2.1s ease-in-out forwards 0.45s; }
 .fairy-flower.stage-growing .p3 { animation: petalOpen 2.1s ease-in-out forwards 0.7s; }
 .fairy
+/* continue: Petals appear in sequence (romantic + fairytale) */
+.fairy-flower.stage-growing .p4 { animation: petalOpen 2.1s ease-in-out forwards 0.95s; }
+.fairy-flower.stage-growing .p5 { animation: petalOpen 2.1s ease-in-out forwards 1.2s; }
+.fairy-flower.stage-growing .p6 { animation: petalOpen 2.1s ease-in-out forwards 1.45s; }
+
+/* Core appears slightly after petals begin */
+.fairy-flower.stage-growing .core {
+  animation: corePop 1.4s ease-out forwards 1.35s;
+}
+
+/* Glow ramps up as bloom completes */
+.fairy-flower.stage-growing .glow {
+  animation: glowBloom 2.4s ease-in-out forwards 0.6s;
+}
+
+/* --- Keyframes --- */
+@keyframes petalOpen {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(var(--r, 0deg));
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.10));
+  }
+  65% {
+    opacity: 0.98;
+    transform: translate(-50%, -50%) scale(1.08) rotate(var(--r, 0deg));
+    filter: drop-shadow(0 16px 16px rgba(0,0,0,0.16));
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(var(--r, 0deg));
+    filter: drop-shadow(0 14px 14px rgba(0,0,0,0.15));
+  }
+}
+
+@keyframes corePop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  70%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes glowBloom {
+  0%   { opacity: 0.05; transform: translateX(-50%) scale(0.9); }
+  60%  { opacity: 0.45; transform: translateX(-50%) scale(1.05); }
+  100% { opacity: 0.28; transform: translateX(-50%) scale(1); }
+}
+
+/* --- Optional: set per-petal rotation via CSS variable so petalOpen can keep rotation --- */
+.p1 { --r: -20deg; }
+.p2 { --r:  25deg; }
+.p3 { --r:  70deg; }
+.p4 { --r: 120deg; }
+.p5 { --r: 165deg; }
+.p6 { --r: 210deg; }
+
+/* Ensure base transforms include the variable rotation when animated */
+.p1, .p2, .p3, .p4, .p5, .p6 {
+  transform: translate(-50%, -50%) scale(0.2) rotate(var(--r));
+}
+
+/* --- Optional: final idle stage --- */
+.fairy-flower.stage-bloomed .petal,
+.fairy-flower.stage-bloomed .core {
+  opacity: 1;
+}
+
+.fairy-flower.stage-bloomed .flower-head {
+  transform: translateX(-50%) scale(1);
+  animation: bloomFloat 4.8s ease-in-out infinite;
+}
+
+.fairy-flower.stage-bloomed .glow {
+  opacity: 0.28;
+  animation: glowPulse 3.8s ease-in-out infinite;
+}
+
+@keyframes bloomFloat {
+  0%, 100% { transform: translateX(-50%) scale(1) rotate(-0.6deg); }
+  50%      { transform: translateX(-50%) scale(1.01) rotate(0.8deg); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.22; transform: translateX(-50%) scale(0.98); }
+  50%      { opacity: 0.34; transform: translateX(-50%) scale(1.03); }
+}
+
+/* Accessibility: visible keyboard focus */
+.fairy-flower:focus-visible {
+  outline: 3px solid rgba(255, 170, 220, 0.75);
+  outline-offset: 6px;
+  border-radius: 18px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .fairy-flower { animation: none; }
+  .fairy-flower.stage-growing .flower-head,
+  .fairy-flower.stage-growing .p1,
+  .fairy-flower.stage-growing .p2,
+  .fairy-flower.stage-growing .p3,
+  .fairy-flower.stage-growing .p4,
+  .fairy-flower.stage-growing .p5,
+  .fairy-flower.stage-growing .p6,
+  .fairy-flower.stage-growing .core,
+  .fairy-flower.stage-growing .glow,
+  .fairy-flower.stage-bloomed .flower-head,
+  .fairy-flower.stage-bloomed .glow {
+    animation: none !important;
+  }
+}
