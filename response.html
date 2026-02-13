@@ -6,6 +6,7 @@
   <title>Yay! 💞</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="page page-success">
   <!-- Falling hearts/confetti -->
   <div class="falling" aria-hidden="true" id="falling"></div>
@@ -38,16 +39,7 @@
         <p class="photo-caption" id="bloomCaption">Tap the bud to watch it bloom ✨</p>
       </div>
     </div>
-      <div class="stem">
-        <span class="node n1"></span>
-        <span class="node n2"></span>
-        <span class="node n3"></span>
-      </div>
-      <div class="leaf leaf-left"></div>
-      <div class="leaf leaf-right"></div>
-      <div class="leaf small leaf-l2"></div>
-      <div class="leaf small leaf-r2"></div>
-        <!-- ------------------------------ -->
+
     <!-- 💖 OUR STORY TIMELINE -->
     <section class="story">
       <h2>Our Story 💕</h2>
@@ -59,7 +51,6 @@
           But somehow, you did. Effortlessly.
         </p>
       </div>
-
 
       <div class="story-block">
         <h3>The Moment I Knew</h3>
@@ -79,7 +70,6 @@
       </div>
     </section>
 
-    <!-- ------------------------------ -->
     <!-- 💌 WHY I LOVE YOU GENERATOR -->
     <section class="love-generator">
       <h2>Reasons I Love You 💗</h2>
@@ -92,7 +82,7 @@
         Tell Me Another 💞
       </button>
     </section>
-    <!-- ------------------------------ -->
+
     <div class="reveal">
       <button class="btn btn-primary" id="revealBtn" type="button">
         Claim Your Prize 🎁
@@ -101,7 +91,6 @@
       <div class="hidden-message" id="hiddenMessage" hidden>
         <h2>One more thing…</h2>
         <p>
-          <!-- ✅ ADD YOUR ROMANTIC MESSAGE HERE -->
           <span class="editable">
             My Dearest Love,<br><br>
             Miles dare to place themselves between us, yet our hearts remain entirely unmoved by them. Each day, I find you in the smallest moments, when your umbrella shields me from the rain, or when I take a step in your badminton shoes. In the quiet moments, you occupy my mind.<br><br>
@@ -113,16 +102,11 @@
     </div>
 
     <div class="music">
-      <!-- OPTIONAL MUSIC:
-           Put an mp3 file in your repo, e.g. "song.mp3"
-           Then set: <source src="song.mp3" type="audio/mpeg">
-      -->
       <button class="btn btn-outline" id="musicBtn" type="button" aria-pressed="false">
         ▶ Play music (optional)
       </button>
 
       <audio id="bgMusic" preload="none" loop>
-        <!-- Example: replace with your own file in the repo -->
         <source src="song.mp3" type="audio/mpeg" />
       </audio>
 
@@ -181,7 +165,7 @@
       } catch (err) {
         alert("Add an audio file source in response.html (see comments) to enable music 🎵");
       }
-    }); // ✅ THIS WAS MISSING
+    });
 
     // 💌 Love reasons generator
     const loveBtn = document.getElementById("loveBtn");
@@ -207,20 +191,38 @@
         loveReason.style.opacity = 1;
       }, 200);
     });
+
     // ✨ Fade in story blocks on scroll
     const storyBlocks = document.querySelectorAll(".story-block");
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
+        if (entry.isIntersecting) entry.target.classList.add("visible");
       });
     }, { threshold: 0.2 });
-
     storyBlocks.forEach(block => observer.observe(block));
 
-  </script>
+    // 🌸 Flower bloom trigger
+    const fairyFlower = document.getElementById("fairyFlower");
+    const bloomCaption = document.getElementById("bloomCaption");
 
+    function startBloom() {
+      if (fairyFlower.classList.contains("stage-growing") || fairyFlower.classList.contains("stage-bloomed")) return;
+
+      fairyFlower.classList.remove("stage-bud");
+      fairyFlower.classList.add("stage-growing");
+      bloomCaption.textContent = "Magic happening… ✨";
+
+      setTimeout(() => {
+        fairyFlower.classList.remove("stage-growing");
+        fairyFlower.classList.add("stage-bloomed");
+        bloomCaption.textContent = "It bloomed! 💖";
+      }, 2600);
+    }
+
+    fairyFlower.addEventListener("click", startBloom);
+    fairyFlower.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") startBloom();
+    });
+  </script>
 </body>
 </html>
