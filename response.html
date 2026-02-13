@@ -62,7 +62,26 @@
         <!-- Change this caption if you want -->
       </p>
     </div>
+    <!--   jjj-->
+    <!-- 💌 WHY I LOVE YOU GENERATOR -->
+    <section class="love-generator">
+      <h2>Reasons I Love You 💗</h2>
 
+      <p id="loveReason" class="love-reason">
+        Click the button to see a reason...
+      </p>
+
+      <button class="btn btn-primary" id="loveBtn" type="button">
+        Tell Me Another 💞
+      </button>
+    </section>
+
+
+
+
+
+
+    <!--   jjj-->   
     <div class="reveal">
       <button class="btn btn-primary" id="revealBtn" type="button">
         Claim Your Prize 🎁
@@ -153,6 +172,32 @@
         // Usually happens if there is no source file or autoplay restriction
         alert("Add an audio file source in response.html (see comments) to enable music 🎵");
       }
+    // 💌 Love reasons generator
+    const loveBtn = document.getElementById("loveBtn");
+    const loveReason = document.getElementById("loveReason");
+
+    const loveReasons = [
+      "Because your laugh fixes my worst days.",
+      "Because you make distance feel small.",
+      "Because you chose me.",
+      "Because you make ordinary moments magical.",
+      "Because your smile is my favorite sight.",
+      "Because life feels better with you in it.",
+      "Because you are my peace.",
+      "Because you steal my heart daily.",
+      "Because you’re my favorite person."
+    ];
+
+    loveBtn.addEventListener("click", () => {
+      const randomIndex = Math.floor(Math.random() * loveReasons.length);
+      
+      // small fade effect
+      loveReason.style.opacity = 0;
+
+      setTimeout(() => {
+        loveReason.textContent = loveReasons[randomIndex];
+        loveReason.style.opacity = 1;
+      }, 200);
     });
   </script>
 </body>
